@@ -21,17 +21,17 @@
         async function cariDataNASA() {
             const urlParams = new URLSearchParams(window.location.search);
             let tanggal = urlParams.get('date');
-            
+
             if (!tanggal) {
                 document.getElementById('hasil').innerText = JSON.stringify({ error: 'Gunakan ?date=YYYY-MM-DD' });
                 return;
             }
-            
+
             for (let key of NASA_APIS) {
                 try {
                     const url = `https://api.nasa.gov/planetary/apod?api_key=${key}&date=${tanggal}`;
                     const response = await fetch(url);
-                    
+
                     if (response.ok) {
                         const data = await response.json();
                         if (data.media_type === 'image') {
@@ -43,10 +43,10 @@
                     console.log('Key gagal:', e);
                 }
             }
-            
+
             document.getElementById('hasil').innerText = JSON.stringify({ error: 'Semua API gagal untuk tanggal ' + tanggal });
         }
-        
+
         cariDataNASA();
     </script>
 </body>
