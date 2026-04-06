@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NASA API Proxy</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <pre id="hasil"></pre>
+
+    <script>
+        // 6 API NASA KAMU
+        const NASA_APIS = [
+            "atqKz8m0Kn7F1eFJ7h3OAHlxNLV36M9rAeSEhYg9",
+            "ixem5lYnedPla5qpD7A7amrb84SC867zx5Vf5dJw",
+            "TwPnxi8MH9evL3Zn3reGRvz5oAHdhI8PyvQNTe2N",
+            "PiDehxAoybWN0KLwQTlcUTb1nwvYqZMR7CFJdsrh",
+            "d8osk4jAmc8FMEHSJkgKmjowPRgAQXmdBBh5aHgZ",
+            "Ozgxfr63aMc6BjnFaD3tuWL8Dmt0DWC5dtXAeUoK"
+        ];
+
+        async function cariDataNASA() {
+            // Ambil parameter date dari URL
+            const urlParams = new URLSearchParams(window.location.search);
+            let tanggal = urlParams.get('date');
+            
+            if (!tanggal) {
+                document.getElementById('hasil').innerText = 'Gunakan ?date=YYYY-MM-DD';
+                return;
+            }
+            
+            for (let key of NASA_APIS) {
+                try {
+                    const url = `https://api.nasa.gov/planetary/apod?api_key=${key}&date=${tanggal}`;
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    
+                    if (response.ok && data.media_type === 'image') {
+                        // Kirim balik data JSON
+                        document.getElementById('hasil').innerText = JSON.stringify(data, null, 2);
+                        return;
+                    }
+                } catch(e) {
+                    console.log('Gagal pake key ini');
+                }
+            }
+            
+            document.getElementById('hasil').innerText = JSON.stringify({ error: 'Tidak ada data' });
+        }
+        
+        cariDataNASA();
+    </script>
+</body>
+</html>
